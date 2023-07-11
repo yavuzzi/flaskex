@@ -6,22 +6,15 @@ on:
   pull_request:
     branches: [ "master" ]
 
-env:
-  LATEST_TAG: user/app:latest
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: Test
-      run: echo "${{ env.LATEST_TAG }}"
-
     
     - name: Build the Docker image
-      run: docker build -t ikambarov/flaskex:${{ env.LATEST_TAG }} .  
+      run: docker build -t ikambarov/flaskex:$( date +%m%d%H%M%S ) .  
 
     - name: Check Docker image
       run: docker images
