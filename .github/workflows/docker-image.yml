@@ -13,5 +13,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Check Docker
-      run: docker --version
+    - name: Build the Docker image
+      run: docker build .  -t ikambarov/flaskex:${{ env.LATEST_TAG }}
+
+    - name: Check Docker image
+      run: docker images
