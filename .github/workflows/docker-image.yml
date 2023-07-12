@@ -17,12 +17,22 @@ jobs:
     
     - name: Expose git commit data
       uses: rlespinasse/git-commit-data-action@v1
-      
+
     - name: Build the Docker image
       run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/flaskex:${{ env.GIT_COMMIT_SHORT_SHA }} .  
 
     - name: Verify Docker Image
       run: docker images
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/flaskex:${{ env.GIT_COMMIT_SHORT_SHA }}'
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH'
 
     - name: Doker Login
       run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }} 
